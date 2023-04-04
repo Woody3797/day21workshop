@@ -2,7 +2,6 @@ package ibf2022.paf.day21workshop.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,15 +32,7 @@ public class CustomerRestController {
     }
 
     @GetMapping
-    public ResponseEntity<String> getallCustomers(@RequestParam(required = false) String offset,
-            @RequestParam(required = false) String limit) {
-
-        if (Objects.isNull(offset)) {
-            offset = "0";
-        }
-        if (Objects.isNull(limit)) {
-            limit = "5";
-        }
+    public ResponseEntity<String> getallCustomers(@RequestParam(required = false, defaultValue = "0") String offset, @RequestParam(required = false, defaultValue = "5") String limit) {
 
         List<Customer> customers = customerRepository.getAllCustomers(Integer.parseInt(offset),
                 Integer.parseInt(limit));
@@ -56,7 +47,7 @@ public class CustomerRestController {
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(result.toString());
     }
 
-    @GetMapping(path = "{customerId}")
+    @GetMapping(path = "/{customerId}")
     public ResponseEntity<String> getCustomerById(@PathVariable Integer customerId) {
         JsonObject result = null;
         try {
@@ -64,14 +55,14 @@ public class CustomerRestController {
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
             objectBuilder.add("customer", customer.toJson());
             result = objectBuilder.build();
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException | NullPointerException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON)
                     .body("{\"error_msg\": \"record not found\"}");
         }
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(result.toString());
     }
 
-    @GetMapping(path = "{customer_id}/orders")
+    @GetMapping(path = "/{customer_id}/orders")
     public ResponseEntity<String> getOrdersFromCustomer(@PathVariable Integer customer_id) {
 
         List<Order> orders = new ArrayList<>();

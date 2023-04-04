@@ -30,15 +30,18 @@ public class CustomerRepository {
 
     // fetch customer using id
     public Customer findCustomerById(Integer id) {
-        List<Customer> customers = template.query(DBQueries.SELECT_CUSTOMER_BY_ID, new CustomerRowMapper(), new Object[]{id});
-
-        return customers.get(0);
+        SqlRowSet rs = template.queryForRowSet(DBQueries.SELECT_CUSTOMER_BY_ID, id);
+        if (rs.first()) {
+            Customer customer = Customer.create(rs);
+            return customer;
+        }
+        return null;
     }
 
     // fetch orders from customer
     public List<Order> getCustomerOrders(Integer id) {
         List<Order> orders = new ArrayList<>();
-        SqlRowSet rs = template.queryForRowSet(DBQueries.SELECT_ORDERS_FROM_CUSTOMER, new Object[]{id});
+        SqlRowSet rs = template.queryForRowSet(DBQueries.SELECT_ORDERS_FROM_CUSTOMER, id);
 
         while (rs.next()) {
             orders.add(Order.create(rs));
