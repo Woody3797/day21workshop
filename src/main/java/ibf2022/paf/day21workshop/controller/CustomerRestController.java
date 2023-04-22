@@ -56,15 +56,13 @@ public class CustomerRestController {
             objectBuilder.add("customer", customer.toJson());
             result = objectBuilder.build();
         } catch (IndexOutOfBoundsException | NullPointerException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON)
-                    .body("{\"error_msg\": \"record not found\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON).body("{\"error_msg\": \"record not found\"}");
         }
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(result.toString());
     }
 
     @GetMapping(path = "/{customer_id}/orders")
     public ResponseEntity<String> getOrdersFromCustomer(@PathVariable Integer customer_id) {
-
         List<Order> orders = new ArrayList<>();
         JsonArray result = null;
         orders = customerRepository.getCustomerOrders(customer_id);
@@ -74,8 +72,7 @@ public class CustomerRestController {
         }
         result = arrayBuilder.build();
         if (result.size() == 0) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON)
-                    .body("{\"error_msg\": \"record not found\"}");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON).body("{\"error_msg\": \"record not found\"}");
         }
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(result.toString());
     }

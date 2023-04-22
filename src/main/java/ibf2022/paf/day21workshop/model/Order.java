@@ -49,14 +49,12 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order [id=" + id + ", shipName=" + shipName + ", shippingFee=" + shippingFee + ", customer=" + customer
-                + "]";
+        return "Order [id=" + id + ", shipName=" + shipName + ", shippingFee=" + shippingFee + ", customer=" + customer + "]";
     }
 
     public static Order create(SqlRowSet rs) {
         Order order = new Order();
         Customer customer = new Customer();
-
         customer.setId(rs.getInt("customer_id"));
         order.setCustomer(customer);
         order.setId(rs.getInt("order_id"));
@@ -64,8 +62,8 @@ public class Order {
         order.setShippingFee(rs.getDouble("shipping_fee"));
         return order;
     }
+    
     public JsonValue toJson() {
-
         return Json.createObjectBuilder()
         .add("customer_id", getCustomer().getId())
         .add("order_id", getId())
